@@ -119,7 +119,7 @@
 // Please choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
  //#define MOTHERBOARD BOARD_RAMPS_14_EFB
-  #define MOTHERBOARD BOARD_RAMPS_14_EEB
+  #define MOTHERBOARD BOARD_RAMPS_13_EEB
 #endif
 
 // Optional custom name for your RepStrap or other custom machine
