@@ -173,8 +173,8 @@
 // Offset of the extruders (uncomment if using more than one and relying on firmware to position when changing).
 // The offset has to be X=0, Y=0 for the extruder 0 hotend (default extruder).
 // For the other hotends it is their distance from the extruder 0 hotend.
-#define HOTEND_OFFSET_X {0.0, 20.00} // (in mm) for each extruder, offset of the hotend on the X axis
-#define HOTEND_OFFSET_Y {0.0, 5.00}  // (in mm) for each extruder, offset of the hotend on the Y axis
+#define HOTEND_OFFSET_X {0.0, 30.2} // (in mm) for each extruder, offset of the hotend on the X axis
+#define HOTEND_OFFSET_Y {0.0, 0.0}  // (in mm) for each extruder, offset of the hotend on the Y axis
 
 // @section machine
 
@@ -453,10 +453,11 @@
 // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
 #define X_MIN_ENDSTOP_INVERTING true //false // set to true to invert the logic of the endstop.
 #define Y_MIN_ENDSTOP_INVERTING true //false // set to true to invert the logic of the endstop.
-#define Z_MIN_ENDSTOP_INVERTING true //false // set to true to invert the logic of the endstop.
+#define Z_MIN_ENDSTOP_INVERTING false //false // set to true to invert the logic of the endstop.
 #define X_MAX_ENDSTOP_INVERTING true //false // set to true to invert the logic of the endstop.
 #define Y_MAX_ENDSTOP_INVERTING true //false // set to true to invert the logic of the endstop.
 #define Z_MAX_ENDSTOP_INVERTING true //false // set to true to invert the logic of the endstop.
+//#define Z_MIN_PROBE_ENDSTOP_INVERTING false // set to true to invert the logic of the probe.
 #define Z_MIN_PROBE_ENDSTOP_INVERTING false // set to true to invert the logic of the probe.
 
 // Enable this feature if all enabled endstop pins are interrupt-capable.
@@ -488,8 +489,18 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
+#define MOTOR_STEPS_PER_REV 200
+ // 1.8 degree = 200 ; 0.9 degree = 400
+#define DRIVER_MICRO_STEP 32
+//  1/16 = 16; 1/32 = 32
+#define THREADED_ROD 10.56
+//M5 = 0.8 ; M8 = 1.25 ; MK7 = 10.56
+#define PHI 3.14159
+
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 4000, 500 }
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 400, 400, 16000, 1368.122 }
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   { 400, 400, 16000, 1368.122 }
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   { 400, 400, 16000,(MOTOR_STEPS_PER_REV * DRIVER_MICRO_STEP) / (THREADED_ROD * PHI) } 192.92
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 400, 400, 16000,200 }
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -590,7 +601,7 @@
  * A Fix-Mounted Probe either doesn't deploy or needs manual deployment.
  *   (e.g., an inductive probe or a nozzle-based probe-switch.)
  */
-//#define FIX_MOUNTED_PROBE
+#define FIX_MOUNTED_PROBE
 
 /**
  * Z Servo Probe, such as an endstop switch on a rotating arm.
@@ -719,8 +730,8 @@
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
-#define INVERT_E0_DIR true //false
-#define INVERT_E1_DIR false
+#define INVERT_E0_DIR false
+#define INVERT_E1_DIR true //false
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
 #define INVERT_E4_DIR false
@@ -742,7 +753,8 @@
 #define X_MIN_POS 0
 #define Y_MIN_POS 0
 #define Z_MIN_POS 0
-#define X_MAX_POS 200
+//#define X_MAX_POS 200
+#define X_MAX_POS 175
 #define Y_MAX_POS 200
 #define Z_MAX_POS 200
 
@@ -810,7 +822,7 @@
  *   With an LCD controller the process is guided step-by-step.
  */
 //#define AUTO_BED_LEVELING_3POINT
-//#define AUTO_BED_LEVELING_LINEAR
+#define AUTO_BED_LEVELING_LINEAR
 //#define AUTO_BED_LEVELING_BILINEAR
 //#define AUTO_BED_LEVELING_UBL
 //#define MESH_BED_LEVELING
@@ -832,14 +844,14 @@
 #if ENABLED(AUTO_BED_LEVELING_LINEAR) || ENABLED(AUTO_BED_LEVELING_BILINEAR)
 
   // Set the number of grid points per dimension.
-  #define GRID_MAX_POINTS_X 3
+  #define GRID_MAX_POINTS_X 2  // 3
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   // Set the boundaries for probing (where the probe can reach).
-  #define LEFT_PROBE_BED_POSITION 15
-  #define RIGHT_PROBE_BED_POSITION 170
-  #define FRONT_PROBE_BED_POSITION 20
-  #define BACK_PROBE_BED_POSITION 170
+  #define LEFT_PROBE_BED_POSITION 10  // 10
+  #define RIGHT_PROBE_BED_POSITION 110  // 170
+  #define FRONT_PROBE_BED_POSITION 30   // 20
+  #define BACK_PROBE_BED_POSITION 190   // 170
 
   // The Z probe minimum outer margin (to validate G29 parameters).
   #define MIN_PROBE_EDGE 10
@@ -945,7 +957,7 @@
 // - If stepper drivers time out, it will need X and Y homing again before Z homing.
 // - Move the Z probe (or nozzle) to a defined XY point before Z Homing when homing all axes (G28).
 // - Prevent Z homing when the Z probe is outside bed area.
-//#define Z_SAFE_HOMING
+#define Z_SAFE_HOMING
 
 #if ENABLED(Z_SAFE_HOMING)
   #define Z_SAFE_HOMING_X_POINT ((X_MIN_POS + X_MAX_POS) / 2)    // X point for Z homing when homing all axis (G28).
@@ -1257,7 +1269,7 @@
 // If you have a speaker that can produce tones, enable it here.
 // By default Marlin assumes you have a buzzer with a fixed frequency.
 //
-//#define SPEAKER
+#define SPEAKER
 
 //
 // The duration and frequency for the UI feedback sound.
